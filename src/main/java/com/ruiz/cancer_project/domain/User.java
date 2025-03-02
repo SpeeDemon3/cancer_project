@@ -1,6 +1,5 @@
 package com.ruiz.cancer_project.domain;
 
-import com.ruiz.cancer_project.entity.NewEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,6 +18,6 @@ public class User {
     private String pass;
     private String webSite;
     private String img;
-    private List<NewEntity> news;
+    private List<New> news;
 
 }
