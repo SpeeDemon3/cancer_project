@@ -1,5 +1,6 @@
-package com.ruiz.cancer_project.domain;
+package com.ruiz.cancer_project.controller.dto;
 
+import com.ruiz.cancer_project.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,13 +12,10 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class New {
-
-    private Long id;
+public class NewRequestDto {
     private String content;
     private Date publicationDate;
     private String img;
     private Date fechaPublicacion;
     private User user;
-
 }
