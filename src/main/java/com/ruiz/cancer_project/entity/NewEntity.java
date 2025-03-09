@@ -2,12 +2,18 @@ package com.ruiz.cancer_project.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
 @Entity
 @Table(name="new")
+@Data
+@NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class NewEntity {
     @Id
     @GeneratedValue

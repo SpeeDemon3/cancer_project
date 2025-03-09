@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,7 +47,25 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> findAll() throws Exception {
-        return List.of();
+
+        Optional<List<UserEntity>> optionalUsers = Optional.of(userRepository.findAll());
+
+        if (optionalUsers.isPresent()) {
+
+            List<UserEntity> userListEntity = optionalUsers.get();
+            List<User> userList = new ArrayList<>();
+
+            for (UserEntity entity : userListEntity) {
+
+                userList.add(userConverter.toUser(entity));
+
+            }
+
+            return userList;
+
+        }
+
+        return null;
     }
 
     @Override

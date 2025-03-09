@@ -10,6 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -60,6 +61,30 @@ public class UserConverter {
 
         return userEntity;
 
+    }
+
+    public User toUser(UserEntity userEntity) {
+
+        User user = new User();
+
+        List<NewEntity> newEntityList = userEntity.getNews();
+        List<New> newList = new ArrayList<>();
+
+        user.setUserId(userEntity.getUserId());
+        user.setName(userEntity.getName());
+        user.setEmail(userEntity.getEmail());
+        user.setPass(userEntity.getPass());
+        user.setWebSite(userEntity.getWebSite());
+        user.setImg(userEntity.getImg());
+
+        for (NewEntity entity : newEntityList) {
+            New news = modelMapper.map(entity, New.class);
+            newList.add(news);
+        }
+
+        user.setNews(newList);
+
+        return user;
     }
 
 }
