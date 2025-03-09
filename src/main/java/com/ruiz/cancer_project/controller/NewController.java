@@ -39,5 +39,16 @@ public class NewController {
 
     }
 
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteById(@PathVariable Long id) {
+
+        try {
+            return ResponseEntity.ok(newService.deleteByid(id));
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+
+    }
+
 
 }

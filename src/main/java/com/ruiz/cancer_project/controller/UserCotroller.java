@@ -44,4 +44,13 @@ public class UserCotroller {
         }
     }
 
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteById(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(userService.deleteById(id));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Error when eliminated user");
+        }
+    }
+
 }

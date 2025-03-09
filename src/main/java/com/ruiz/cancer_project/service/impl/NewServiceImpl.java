@@ -101,6 +101,14 @@ public class NewServiceImpl implements NewService {
 
     @Override
     public Boolean deleteByid(Long id) throws Exception {
-        return null;
+
+        Optional<NewEntity> newEntity = newRepository.findById(id);
+
+        if (newEntity.isPresent()) {
+            newRepository.deleteById(id);
+            return true;
+        }
+
+        throw new Exception("New Id not found.");
     }
 }
