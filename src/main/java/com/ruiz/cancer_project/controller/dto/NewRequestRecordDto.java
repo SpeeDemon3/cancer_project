@@ -8,7 +8,6 @@ public record NewRequestRecordDto(
         String content,
         Date publicationDate,
         String img,
-        Date fechaPublicacion,
-        User user
+        Long  userId
 ) {
 }

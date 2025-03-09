@@ -17,6 +17,5 @@ public class NewResponseDto {
     private String content;
     private Date publicationDate;
     private String img;
-    private Date fechaPublicacion;
     private User user;
 }

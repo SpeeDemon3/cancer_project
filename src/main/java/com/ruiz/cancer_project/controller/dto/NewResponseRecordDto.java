@@ -9,7 +9,6 @@ public record NewResponseRecordDto(
         String content,
         Date publicationDate,
         String img,
-        Date fechaPublicacion,
         User user
 ) {
 }

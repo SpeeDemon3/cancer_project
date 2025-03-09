@@ -16,6 +16,5 @@ public class NewRequestDto {
     private String content;
     private Date publicationDate;
     private String img;
-    private Date fechaPublicacion;
-    private User user;
+    private Long userId;
 }

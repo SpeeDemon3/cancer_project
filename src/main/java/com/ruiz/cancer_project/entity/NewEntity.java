@@ -27,8 +27,7 @@ public class NewEntity {
     private Date publicationDate;
     @Column(name="img")
     private String img;
-    @Temporal(TemporalType.DATE)
-    private Date fechaPublicacion;
+
 
     @ManyToOne()
     @JoinColumn(name = "userId")
