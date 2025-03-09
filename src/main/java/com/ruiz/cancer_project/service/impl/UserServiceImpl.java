@@ -1,6 +1,7 @@
 package com.ruiz.cancer_project.service.impl;
 
 import com.ruiz.cancer_project.controller.dto.UserRequestRecordDto;
+import com.ruiz.cancer_project.controller.dto.UserResponseRecordDto;
 import com.ruiz.cancer_project.domain.User;
 import com.ruiz.cancer_project.entity.UserEntity;
 import com.ruiz.cancer_project.repository.UserRepository;
@@ -12,8 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -46,30 +49,36 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> findAll() throws Exception {
+    public List<UserResponseRecordDto> findAll() throws Exception {
+        // Obtener la lista de UserEntity desde el repositorio
+        List<UserEntity> userListEntity = userRepository.findAll();
 
-        Optional<List<UserEntity>> optionalUsers = Optional.of(userRepository.findAll());
+        // Verificar si la lista no está vacía
+        if (!userListEntity.isEmpty()) {
+            log.info("Users found successfully!!!!");
 
-        if (optionalUsers.isPresent()) {
+            // Mapear la lista de UserEntity a UserResponseRecordDto
+            List<UserResponseRecordDto> userResponseRecordDtoList = userListEntity.stream()
+                    .map(userConverter::toUserResponseRecordDto)
+                    .collect(Collectors.toList());
 
-            List<UserEntity> userListEntity = optionalUsers.get();
-            List<User> userList = new ArrayList<>();
-
-            for (UserEntity entity : userListEntity) {
-
-                userList.add(userConverter.toUser(entity));
-
-            }
-
-            return userList;
-
+            return userResponseRecordDtoList;
         }
 
-        return null;
+        // Si la lista está vacía, devolver una lista vacía
+        log.info("No users found.");
+        return Collections.emptyList();
     }
 
     @Override
     public User findById(Long id) throws Exception {
+
+        Optional<UserEntity> userEntity = userRepository.findById(id);
+
+        if (userEntity.isPresent()) {
+            return modelMapper.map(userEntity, User.class);
+        }
+
         return null;
     }
 

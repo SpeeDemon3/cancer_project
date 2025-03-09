@@ -1,6 +1,6 @@
 package com.ruiz.cancer_project.controller.dto;
 
-import com.ruiz.cancer_project.entity.NewEntity;
+import com.ruiz.cancer_project.domain.New;
 
 import java.util.List;
 
@@ -11,6 +11,6 @@ public record UserResponseRecordDto(
         String pass,
         String webSite,
         String img,
-        List<NewEntity>news
+        List<New>news
 ) {
 }

@@ -1,5 +1,6 @@
 package com.ruiz.cancer_project.controller.dto;
 
+import com.ruiz.cancer_project.domain.New;
 import com.ruiz.cancer_project.entity.NewEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,5 +19,5 @@ public class UserRequestDto {
     private String pass;
     private String webSite;
     private String img;
-    private List<NewEntity> news;
+    private List<New> news;
 }

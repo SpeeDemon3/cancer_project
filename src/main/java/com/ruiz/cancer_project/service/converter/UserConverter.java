@@ -1,6 +1,8 @@
 package com.ruiz.cancer_project.service.converter;
 
+import com.ruiz.cancer_project.controller.dto.UserRequestDto;
 import com.ruiz.cancer_project.controller.dto.UserRequestRecordDto;
+import com.ruiz.cancer_project.controller.dto.UserResponseRecordDto;
 import com.ruiz.cancer_project.domain.New;
 import com.ruiz.cancer_project.domain.User;
 import com.ruiz.cancer_project.entity.NewEntity;
@@ -11,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,18 +26,80 @@ public class UserConverter {
 
     public User toUser(UserRequestRecordDto dto) {
 
-        List<New> newList = dto.news().stream()
+        User user = new User();
+        user.setEmail(dto.email());
+        user.setPass(dto.pass());
+        user.setWebSite(dto.webSite());
+        user.setImg(dto.img());
+
+        log.info("Converter UserEntity to User successfully!!!!");
+
+        return user;
+    }
+
+    public User toUser(UserRequestDto dto) {
+
+
+        List<New> newList = dto.getNews().stream()
                 .map(newUser -> modelMapper.map(newUser, New.class))
                 .collect(Collectors.toList());
 
-        User user = User.builder()
-                .userId(null)
-                .email(dto.email())
-                .pass(dto.pass())
-                .webSite(dto.webSite())
-                .img(dto.img())
-                .news(newList)
-                .build();
+        if (newList == null) {
+            newList = new ArrayList<>();
+        }
+
+        User user = new User();
+        user.setEmail(dto.getEmail());
+        user.setPass(dto.getPass());
+        user.setWebSite(dto.getWebSite());
+        user.setImg(dto.getImg());
+
+        log.info("Converter UserEntity to User successfully!!!!");
+
+        return user;
+    }
+
+    public UserResponseRecordDto toUserResponseRecordDto(UserEntity entity) {
+        // Mapear la lista de NewEntity a New, manejando el caso en que entity.getNews() sea nulo
+        List<New> newList = entity.getNews() != null ?
+                entity.getNews().stream()
+                        .map(newUserEntity -> modelMapper.map(newUserEntity, New.class))
+                        .collect(Collectors.toList()) :
+                Collections.emptyList();
+
+        // Crear y devolver el UserResponseRecordDto
+        return new UserResponseRecordDto(
+                entity.getUserId(), // Asignar el userId correcto
+                entity.getName(),
+                entity.getEmail(),
+                entity.getPass(),
+                entity.getWebSite(),
+                entity.getImg(),
+                newList
+        );
+    }
+
+    public UserResponseRecordDto toUserResponse(UserRequestDto dto) {
+
+
+        List<New> newList = dto.getNews().stream()
+                .map(newUser -> modelMapper.map(newUser, New.class))
+                .collect(Collectors.toList());
+
+        if (newList == null) {
+            newList = new ArrayList<>();
+            log.info("There are not news.");
+        }
+
+        UserResponseRecordDto user = new UserResponseRecordDto(
+                null,
+                dto.getName(),
+                dto.getEmail(),
+                dto.getPass(),
+                dto.getWebSite(),
+                dto.getImg(),
+                dto.getNews()
+        );
 
         log.info("Converter UserEntity to User successfully!!!!");
 
@@ -43,9 +108,6 @@ public class UserConverter {
 
     public UserEntity toUserEntity(UserRequestRecordDto userRequestRecordDto) {
 
-        List<NewEntity> newEntityList = userRequestRecordDto.news().stream()
-                .map(newUser -> modelMapper.map(newUser, NewEntity.class))
-                .collect(Collectors.toList());
 
         UserEntity userEntity = new UserEntity(
                 null,
@@ -54,12 +116,32 @@ public class UserConverter {
                 userRequestRecordDto.pass(),
                 userRequestRecordDto.webSite(),
                 userRequestRecordDto.img(),
-                newEntityList
+                null
         );
 
         log.info("Converter UserRequest to UserEntity successfully!!!!");
 
         return userEntity;
+
+    }
+
+    public UserResponseRecordDto toUserEntity(UserEntity userEntity) {
+
+        List<New> newList = modelMapper.map(userEntity.getNews(), List.class);
+
+        UserResponseRecordDto userResponseRecordDto = new UserResponseRecordDto(
+                userEntity.getUserId(),
+                userEntity.getName(),
+                userEntity.getEmail(),
+                userEntity.getPass(),
+                userEntity.getWebSite(),
+                userEntity.getImg(),
+                newList
+        );
+
+        log.info("Converter UserEntity to UserResponseRecordDto successfully!!!!");
+
+        return userResponseRecordDto;
 
     }
 
