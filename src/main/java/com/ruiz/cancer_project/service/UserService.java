@@ -1,5 +1,6 @@
 package com.ruiz.cancer_project.service;
 
+import com.ruiz.cancer_project.controller.dto.NewRequestRecordDto;
 import com.ruiz.cancer_project.controller.dto.UserRequestRecordDto;
 import com.ruiz.cancer_project.controller.dto.UserResponseRecordDto;
 import com.ruiz.cancer_project.domain.User;
@@ -12,4 +13,5 @@ public interface UserService {
     User findById(Long id) throws Exception;
     User updateById(Long id, UserRequestRecordDto userRequestRecordDtoUpdate) throws Exception;
     Boolean deleteById(Long id) throws Exception;
+
 }

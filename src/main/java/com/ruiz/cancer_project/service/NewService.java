@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface NewService {
 
-    NewResponseRecordDto save(NewRequestRecordDto newRequestRecordDto) throws Exception;
+    NewResponseRecordDto save(Long userId, NewRequestRecordDto newRequestRecordDto) throws Exception;
     NewResponseDto findById(Long id) throws Exception;
     List<NewResponseDto> findAll() throws Exception;
     NewResponseRecordDto updateById(Long id, NewRequestRecordDto newRequestRecordDto) throws Exception;

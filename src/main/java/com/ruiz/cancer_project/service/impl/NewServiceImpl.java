@@ -1,40 +1,92 @@
 package com.ruiz.cancer_project.service.impl;
 
 import com.ruiz.cancer_project.controller.NewController;
-import com.ruiz.cancer_project.controller.UserCotroller;
-import com.ruiz.cancer_project.controller.dto.NewRequestDto;
 import com.ruiz.cancer_project.controller.dto.NewRequestRecordDto;
 import com.ruiz.cancer_project.controller.dto.NewResponseDto;
 import com.ruiz.cancer_project.controller.dto.NewResponseRecordDto;
+import com.ruiz.cancer_project.domain.User;
+import com.ruiz.cancer_project.entity.NewEntity;
+import com.ruiz.cancer_project.entity.UserEntity;
+import com.ruiz.cancer_project.repository.NewRepository;
 import com.ruiz.cancer_project.service.NewService;
+import com.ruiz.cancer_project.service.UserService;
+import com.ruiz.cancer_project.service.converter.NewConverte;
+import com.ruiz.cancer_project.service.converter.UserConverter;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
 public class NewServiceImpl implements NewService {
 
-    private final NewController newController;
-    private final UserCotroller userCotroller;
+    private final NewRepository newRepository;
+    private final UserService userService;
+    private final UserConverter userConverter;
 
-    public NewServiceImpl(NewController newController, UserCotroller userCotroller) {
-        this.newController = newController;
-        this.userCotroller = userCotroller;
+    @Autowired
+    private ModelMapper modelMapper;
+
+    @Autowired
+    private NewConverte newConverte;
+
+
+    public NewServiceImpl(NewRepository newRepository, UserService userService, UserConverter userConverter) {
+        this.newRepository = newRepository;
+        this.userService = userService;
+        this.userConverter = userConverter;
     }
 
     @Override
-    public NewResponseRecordDto save(NewRequestRecordDto newRequestRecordDto) throws Exception {
+    public NewResponseRecordDto save(Long userId, NewRequestRecordDto newRequestRecordDto) throws Exception {
+
+        User userEntityOptional = userService.findById(userId);
+        User user = modelMapper.map(userEntityOptional, User.class);
 
 
+        NewResponseRecordDto responseRecordDto = new NewResponseRecordDto(
+                null,
+                newRequestRecordDto.title(),
+                newRequestRecordDto.content(),
+                newRequestRecordDto.publicationDate(),
+                newRequestRecordDto.img(),
+                user
+        );
 
-        return null;
+        NewEntity newEntity = new NewEntity(
+                null,
+                responseRecordDto.title(),
+                responseRecordDto.content(),
+                responseRecordDto.publicationDate(),
+                responseRecordDto.img(),
+                null
+                );
+
+        UserEntity userEntity = modelMapper.map(userService.findById(userId), UserEntity.class);
+        userEntity.getNews().add(modelMapper.map(newRequestRecordDto, NewEntity.class));
+        newEntity.setUser(userEntity);
+
+        newRepository.save(newEntity);
+
+        return responseRecordDto;
     }
 
     @Override
     public NewResponseDto findById(Long id) throws Exception {
-        return null;
+
+        Optional<NewEntity> newEntityOptional = newRepository.findById(id);
+
+        if(newEntityOptional.isPresent()) {
+            log.info("Return new");
+            //return modelMapper.map(newEntityOptional.get(), NewResponseDto.class);
+            return newConverte.toNewResponseDto(newEntityOptional.get());
+        }
+
+        throw new Exception("New not found with id: " + id); // Lanza una excepción si no se encuentra
     }
 
     @Override
