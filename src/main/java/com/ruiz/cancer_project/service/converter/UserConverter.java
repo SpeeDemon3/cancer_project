@@ -61,11 +61,18 @@ public class UserConverter {
 
     public UserResponseRecordDto toUserResponseRecordDto(UserEntity entity) {
         // Mapear la lista de NewEntity a New, manejando el caso en que entity.getNews() sea nulo
-        List<New> newList = entity.getNews() != null ?
-                entity.getNews().stream()
-                        .map(newUserEntity -> modelMapper.map(newUserEntity, New.class))
-                        .collect(Collectors.toList()) :
-                Collections.emptyList();
+        List<NewEntity> newListEntity = entity.getNews();
+        List<New> newList = new ArrayList<>();
+
+        if (newListEntity != null) {
+
+            for (NewEntity newEntity : newListEntity) {
+
+                newList.add(modelMapper.map(newEntity, New.class));
+
+            }
+
+        }
 
         // Crear y devolver el UserResponseRecordDto
         return new UserResponseRecordDto(
@@ -168,5 +175,7 @@ public class UserConverter {
 
         return user;
     }
+
+
 
 }

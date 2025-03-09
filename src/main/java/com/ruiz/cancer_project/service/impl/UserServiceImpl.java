@@ -53,14 +53,18 @@ public class UserServiceImpl implements UserService {
         // Obtener la lista de UserEntity desde el repositorio
         List<UserEntity> userListEntity = userRepository.findAll();
 
+        log.info("Start Find All");
+
         // Verificar si la lista no está vacía
-        if (!userListEntity.isEmpty()) {
+        if (userListEntity != null) {
             log.info("Users found successfully!!!!");
 
             // Mapear la lista de UserEntity a UserResponseRecordDto
-            List<UserResponseRecordDto> userResponseRecordDtoList = userListEntity.stream()
-                    .map(userConverter::toUserResponseRecordDto)
-                    .collect(Collectors.toList());
+            List<UserResponseRecordDto> userResponseRecordDtoList = new ArrayList<>();
+
+            for (UserEntity entity : userListEntity) {
+                userResponseRecordDtoList.add(userConverter.toUserResponseRecordDto(entity));
+            }
 
             return userResponseRecordDtoList;
         }
